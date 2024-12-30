@@ -1,7 +1,7 @@
 '''
   * FILE PROCESSOR
 	by Onko Aikuu (@furry_onko)
-	version 2.0
+	version 2.1
 '''
 
 import random
@@ -38,7 +38,6 @@ def help():
 	print("- open: open file\n")
 
 def delete(file):
-	print(file)
 	while True:
 		confirm = input(f"Are you sure you want to delete \"{os.path.basename(file)}\"? (Y/N): ")
 		confirm = confirm.upper()
@@ -229,7 +228,7 @@ def seek(what, fileLines, file=None):
 			elif seekWord:
 				result = []
 				for line in fileLines:
-					words = re.findall(r'\b\w+\b', line.strip())
+					words = re.findall(r'\w+', line.strip())
 					for word in words:
 						if re.match(f"^{re.escape(seekWord)}$", word):
 							result.append(word)
@@ -403,18 +402,12 @@ def typePath():
 		elif path == "exit":
 			print("Bye!")
 			exit()
-		elif path:
-			print("Incorrect path name")
-			typePath()
+		elif '/' and ':' in path:
+			processPath(path)
 			break
 		else:
-			if path.strip():
-				processPath(path)
-				break
-			else:
-				print("Error. No path typed.")
-				typePath()
-				break
+			print("Incorrect path name")
+			typePath()
 
-print("File Processor v2.0\nBy Onko Aikuu (@furry_onko)")
-typePath() #hehe 420 7w7
+print("File Processor v2.1\nBy Onko Aikuu (@furry_onko)")
+typePath()
