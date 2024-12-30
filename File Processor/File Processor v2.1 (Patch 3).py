@@ -62,18 +62,24 @@ def delete(file):
 			break
 
 def rename(file, ext, path):
-	current = file
+	current = os.path.join(path, os.path.basename(file))
 	while True:
 		new = input("Type new name (or type \"###\" to exit): ")
-		if new == current:
+		if new == os.path.basename(current):
 			print("File name will not change")
 			break
 		elif not new:
 			print("Error. Type new name")
 		else:
 			try:
-				os.rename(f"{path}/{current}", f"{path}/{new}.{ext}")
+				new = os.path.join(path, f"{new}{ext}")
+				print(new)
+				os.rename(current, new)
+				current = new
+				with open(new, 'r', encoding='utf-8', errors='replace') as f:
+					pass
 				print("Done.")
+				quietPrepare(new)
 				break
 			except FileNotFoundError:
 				print("Error. File does not exist")
@@ -82,12 +88,12 @@ def rename(file, ext, path):
 				print("Error. You do not have permission to rename this file")
 				break
 			except Exception as exc:
-				print("An unknown error occured")
+				print("An unknown error occured {exc}")
 				break
 
-def enc(file, type, enc="utf-8"):
+def enc(file, type):
 	if type == 1:
-		with open(file, 'r', encoding=enc, errors='replace') as f:
+		with open(file, 'r', encoding='utf-8', errors='replace') as f:
 			content = f.read()
 
 		with open(file, 'w', encoding='utf-8') as f:
@@ -97,7 +103,7 @@ def enc(file, type, enc="utf-8"):
 			detected = cn.detect(f.read())
 			encoding = detected['encoding']
 
-		with open(file, 'r', encoding=encoding, errors='replace') as f:
+		with open(file, 'r', encoding='utf-8', errors='replace') as f:
 			fileLines = f.readlines()
 		
 		print("Encoding changed to UTF-8")
@@ -111,7 +117,7 @@ def enc(file, type, enc="utf-8"):
 	else:
 		print("What the fuck?")
 
-def line(fileLines, file, encoding):
+def line(fileLines, file):
 	while True:
 		amount = input("Type amount of lines (or type \"###\" to exit): ")
 		if amount == "###":
@@ -124,7 +130,7 @@ def line(fileLines, file, encoding):
 					insert = input(">> ")
 					f.write(f"{insert}\n")
 					amount -= 1
-			with open(file, 'r', encoding=encoding, errors='replace') as f:
+			with open(file, 'r', encoding='utf-8', errors='replace') as f:
 				fileLines[:] = f.readlines()
 			print("File updated")
 			break
@@ -312,7 +318,7 @@ def mainProgram(fileLines=None, file=None, encoding='utf-8', banEdit=False):
 				typePath()
 
 			elif command == "encoding !":
-				enc(file, 1, encoding)
+				enc(file, 1)
 
 			elif command == "encoding" or command == "encoding ?":
 				enc(file, 2)
@@ -338,7 +344,7 @@ def mainProgram(fileLines=None, file=None, encoding='utf-8', banEdit=False):
 				exit()
 
 			elif command == "line":
-				line(fileLines, file, encoding)
+				line(fileLines, file)
 
 			elif command == "file size":
 				size = os.path.getsize(file)
@@ -393,6 +399,27 @@ def mainProgram(fileLines=None, file=None, encoding='utf-8', banEdit=False):
 			os.system("Pause")
 			exit()
 
+def quietPrepare(file):
+	while True:
+		try:
+			with open(file, 'rb') as f:
+				detected = cn.detect(f.read())
+				encoding = detected['encoding']
+
+			with open(file, 'r', encoding=encoding, errors='replace') as f:
+				fileLines = f.readlines()
+			mainProgram(fileLines, file, encoding)
+			break
+
+		except FileNotFoundError:
+			print(f"Error. File in path \"{file}\" does not exist.")
+			break
+
+		except Exception as exc:
+			print(f"An error occurred: {exc}") 
+			break # hehe 420 7w7
+
+
 def prepareFile(file):
 	while True:
 		try:
@@ -400,8 +427,10 @@ def prepareFile(file):
 				detected = cn.detect(f.read())
 				encoding = detected['encoding']
 				print(f"File encoding: {encoding}")
+				if encoding != 'utf-8':
+					print("File is in wrong encoding. Changing encoding immediately when characters change.")
 
-			with open(file, 'r', encoding=encoding, errors='replace') as f:
+			with open(file, 'r', encoding='utf-8', errors='replace') as f:
 				fileLines = f.readlines()
 				countedLines = len(fileLines)
 				size = os.path.getsize(file)
@@ -418,14 +447,14 @@ def prepareFile(file):
 			print(f"An error occurred: {exc}")
 			break
 
-def processPath(path): # hehe 420 7w7
+def processPath(path):
 	path = path.replace('"', '')
 	print("Processing path completed.")
 	prepareFile(path)
 
 def typePath():
 	while True:
-		path = input("Paste path here (or type ### to skip): ")
+		path = input("Paste path here (or type \"###\" to skip): ")
 		if path == "###":
 			print("No file entered. Modifying files will be impossible,")
 			mainProgram(banEdit=True)
