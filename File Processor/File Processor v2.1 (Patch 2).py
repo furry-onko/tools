@@ -29,6 +29,7 @@ def help():
 	print("    - name: get file name")
 	print("    - size: get file size")
 	print("  - del: delete file")
+	print("  - rename: rename file")
 	print("WHEN FILE IS NOT SELECTED")
 	print("  - makefile: create file in selected direcotry\n")
 	print("FOR EVERY STATE")
@@ -59,6 +60,30 @@ def delete(file):
 		elif confirm == "N":
 			print(f"File \"{file}\" was not deleted")
 			break
+
+def rename(file, ext, path):
+	current = file
+	while True:
+		new = input("Type new name (or type \"###\" to exit): ")
+		if new == current:
+			print("File name will not change")
+			break
+		elif not new:
+			print("Error. Type new name")
+		else:
+			try:
+				os.rename(f"{path}/{current}", f"{path}/{new}.{ext}")
+				print("Done.")
+				break
+			except FileNotFoundError:
+				print("Error. File does not exist")
+				break
+			except PermissionError:
+				print("Error. You do not have permission to rename this file")
+				break
+			except Exception as exc:
+				print("An unknown error occured")
+				break
 
 def enc(file, type, enc="utf-8"):
 	if type == 1:
@@ -298,6 +323,12 @@ def mainProgram(fileLines=None, file=None, encoding='utf-8', banEdit=False):
 			elif command == "del":
 				delete(file)
 
+			elif command == "rename":
+				filename = os.path.basename(file)
+				fname, ext = os.path.splitext(filename)
+				pathto = os.path.dirname(os.path.abspath(file))
+				rename(file, ext, pathto)
+
 			elif command == "cl" or command == "~" or command == "$":
 				os.system("cls")
 
@@ -387,8 +418,7 @@ def prepareFile(file):
 			print(f"An error occurred: {exc}")
 			break
 
-
-def processPath(path):
+def processPath(path): # hehe 420 7w7
 	path = path.replace('"', '')
 	print("Processing path completed.")
 	prepareFile(path)
