@@ -450,7 +450,7 @@ def prepareFile(file):
 			with open(file, 'rb') as f:
 				detected = cn.detect(f.read())
 				encoding = detected['encoding']
-				print(Fore.GREEN + Style.BRIGHT + "File encoding: " + Style.RESET_ALL + Fore.BLUE + Style.BRIGHT + encoding + Style.RESET_ALL)
+				print(Fore.GREEN + Style.BRIGHT + "File encoding: " + Style.RESET_ALL + Fore.BLUE + Style.BRIGHT + f"{encoding}" + Style.RESET_ALL)
 				if encoding != 'utf-8':
 					print(Style.RESET_ALL + Fore.YELLOW + Style.BRIGHT + "File is in wrong encoding. Changing encoding immediately when characters change." + Style.RESET_ALL)
 
