@@ -1,7 +1,7 @@
 '''
   * FILE PROCESSOR
 	by Onko Aikuu (@furry_onko)
-	version 2.1
+	version 3.1
 '''
 
 import random
@@ -9,6 +9,7 @@ import re
 import charset_normalizer as cn
 import os
 from colorama import Fore, Back, Style, init
+import time
 
 UNDERLINED = '\033[4m'
 
@@ -416,8 +417,8 @@ def mainProgram(fileLines=None, file=None, encoding='utf-8', banEdit=False):
 				print(Back.RED + "Error. No command" + Style.RESET_ALL)
 
 			else:
-				print(Back.RED + "Error. Wrong command" + Style.RESET_ALL)
-# hehe 420 7w7
+				print(Back.RED + "Error. Wrong command" + Style.RESET_ALL) # hehe 420 7w7
+
 		else:
 			print(Back.RED + "Error. You are at the point, where you are in no state. This means, that you will not be able to execute any command. Please restart our program" + Style.RESET_ALL + Fore.BLUE + Style.BRIGHT)
 			os.system("Pause")
@@ -458,7 +459,7 @@ def prepareFile(file):
 				fileLines = f.readlines()
 				countedLines = len(fileLines)
 				size = os.path.getsize(file)
-				print(Fore.GREEN + Style.BRIGHT + "Processing lines completed (" + Style.RESET_ALL + Fore.BLUE + Style.BRIGHT + str(countedLines) + Style.RESET_ALL + Fore.GREEN + Style.BRIGHT + " lines.)" + Style.RESET_ALL)
+				# print(Fore.GREEN + Style.BRIGHT + "Processing lines completed (" + Style.RESET_ALL + Fore.BLUE + Style.BRIGHT + str(countedLines) + Style.RESET_ALL + Fore.GREEN + Style.BRIGHT + " lines.)" + Style.RESET_ALL)
 				print(Fore.GREEN + Style.BRIGHT + "Size: " + Style.RESET_ALL + Fore.BLUE + Style.BRIGHT + str(size) + Style.RESET_ALL + Fore.GREEN + Style.BRIGHT + " bytes" + Style.RESET_ALL)
 			mainProgram(fileLines, file, encoding)
 			break
@@ -469,14 +470,29 @@ def prepareFile(file):
 			break
 
 		except Exception as exc:
-			print(f"An error occurred: {exc}")
+			print(Back.RED + f"An error occurred: {exc}" + Style.RESET_ALL)
 			typePath()
 			break
+
+def count_lines(file_path):
+    with open(file_path, "r", errors='replace') as f:
+        total_lines = sum(1 for l in f)
+    with open(file_path, "r", errors='replace') as f:
+        current_line = 0
+        for line in f:
+            current_line += 1
+            progress = int((current_line / total_lines) * 50)
+            bar =  "█" * progress + " " * (50 - progress)
+            print(Fore.YELLOW + Style.DIM + f"\r{bar} " + Style.RESET_ALL + Fore.GREEN + Style.BRIGHT + f"{current_line}/{total_lines} lines", end="")
+
+    print(Style.RESET_ALL + Fore.GREEN + Style.BRIGHT + "\nDone" + Style.RESET_ALL)
+    prepareFile(file_path)
+
 
 def processPath(path):
 	path = path.replace('"', '')
 	print(Style.RESET_ALL + Style.BRIGHT + Fore.GREEN + "Processing path completed." + Style.RESET_ALL)
-	prepareFile(path)
+	count_lines(path)
 
 def typePath():
 	while True:
@@ -496,5 +512,5 @@ def typePath():
 			typePath()
 			break
 
-print(Fore.BLUE + Style.BRIGHT + "File Processor 3.0\nBy Onko Aikuu (@furry_onko)" + Style.RESET_ALL)
+print(Fore.BLUE + Style.BRIGHT + "File Processor 3.1\nBy Onko Aikuu (@furry_onko)" + Style.RESET_ALL)
 typePath()
