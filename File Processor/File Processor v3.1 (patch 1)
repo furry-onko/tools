@@ -3,15 +3,24 @@
 	by Onko Aikuu (@furry_onko)
 	version 3.1
 '''
-
-import random
-import re
-import charset_normalizer as cn
 import os
-from colorama import Fore, Back, Style, init
-import time
+try:
+	import random
+	import re
+	import charset_normalizer as cn
+	from colorama import Fore, Back, Style, init
+	import time
+except ImportError:
+	UNDERLINED = '\033[4m'
+	print(UNDERLINED + "ERROR. INSTALLING MISSING PACKAGES. PLEASE WAIT.")
+	os.system("python -m pip install random")
+	os.system("python -m pip install re")
+	os.system("python -m pip install charset_normalizer")
+	os.system("python -m pip install colorama")
+	os.system("python -m pip install time")
 
-UNDERLINED = '\033[4m'
+print(Style.RESET_ALL)
+os.system("cls")
 
 init()
 
