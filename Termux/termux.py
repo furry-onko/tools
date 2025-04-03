@@ -5,8 +5,7 @@ import colors as c
 def Insert() -> None:
     while True:
         cmd_input: str|int = input(c.color(">>", "green"))
-        cmd: list = cmd_input.split(" ")
-
+        cmd: list = cmd_input.lower().split(" ")
 
         if not cmd[:]:
             print("", end="\r")
@@ -14,7 +13,7 @@ def Insert() -> None:
         if cmd[0] in ["exit", "quit", "#"]:
             if len(cmd) > 1 and cmd[1].isdigit():
                 exit(int(cmd[1]))
-                break
+
             else:
                 exit(0)
         

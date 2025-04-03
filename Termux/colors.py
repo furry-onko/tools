@@ -50,45 +50,7 @@ def style(text: str, style: str) -> str:
         return f"\033[4m{text}\033[0m"
     elif style == "reverse":
         return f"\033[7m{text}\033[0m"
-    elif style == "blink":
-        return f"\033[5m{text}\033[0m"
-    elif style == "dim":
-        return f"\033[2m{text}\033[0m"
-    elif style == "hidden":
-        return f"\033[8m{text}\033[0m"
-    elif style == "strikethrough":
-        return f"\033[9m{text}\033[0m"
-    elif style == "italic":
-        return f"\033[3m{text}\033[0m"
-    elif style == "light":
-        return f"\033[37m{text}\033[0m"
     elif style == "dark":
         return f"\033[90m{text}\033[0m"
     else:
         return text
-
-def debug_color_output():
-    """Prints sample outputs for debugging terminal color support."""
-    print("Testing colors:")
-    print(color("This is red", "red"))
-    print(color("This is green", "green"))
-    print(color("This is yellow", "yellow"))
-    print(color("This is blue", "blue"))
-    print(color("This is purple", "purple"))
-    print(color("This is cyan", "cyan"))
-    print(color("This is white", "white"))
-    print(color("This is black", "black"))
-    print("\nTesting styles:")
-    print(style("This is bold", "bold"))
-    print(style("This is underline", "underline"))
-    print(style("This is reverse", "reverse"))
-    print(style("This is blink", "blink"))
-    print(style("This is dim", "dim"))
-    print(style("This is hidden", "hidden"))
-    print(style("This is strikethrough", "strikethrough"))
-    print(style("This is italic", "italic"))
-    print(style("This is light", "light"))
-    print(style("This is dark", "dark"))
-
-# Uncomment the line below to test the output
-debug_color_output()
